@@ -1,0 +1,22 @@
+{
+  "extends": "@chatie/tsconfig",
+  "compilerOptions": {
+    "outDir": "dist",
+    "resolveJsonModule": true,
+    "moduleResolution": "node",
+  },
+  "exclude": [
+    "node_modules/",
+    "dist/",
+    "test",
+  ],
+  "include": [
+    "app/**/*.ts",
+    "bin/*.ts",
+    "bot/**/*.ts",
+    "examples/**/*.ts",
+    "scripts/**/*.ts",
+    "src/**/*.ts",
+    "tests/**/*.spec.ts",
+  ],
+}

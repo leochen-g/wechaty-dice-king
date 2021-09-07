@@ -1,0 +1,50 @@
+{
+  "name": "wechaty-dice-bot",
+  "version": "1.0.0",
+  "description": "Wechaty 卡牌抽取游戏插件，类似骰娘https://v2docs.kokona.tech/zh/latest/CookBook.html",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "scripts": {
+    "clean": "shx rm -fr dist/*",
+    "start": "ts-node test/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dist": "npm run clean && tsc",
+    "pack": "npm pack",
+    "lint:es": "eslint --ignore-pattern tests/fixtures/ '{bin,examples,scripts,src,tests}/**/*.ts'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leochen-g/wechaty-dice-bot.git",
+    "lint": "npm run lint:es && npm run lint:ts && npm run lint:md",
+    "lint:md": "markdownlint README.md",
+    "lint:ts": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "wechaty": "*"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/leochen-g/wechaty-dice-bot/issues"
+  },
+  "homepage": "https://github.com/leochen-g/wechaty-dice-bot#readme",
+  "engines": {
+    "node": ">= 12",
+    "wechaty": ">=0.56"
+  },
+  "dependencies": {
+    "nedb-promises": "^5.0.0",
+    "qrcode-terminal": "^0.12.0",
+    "random-sampler": "^0.1.1",
+    "wechaty": "^0.68.1",
+    "wechaty-puppet-wechat": "^0.28.4"
+  },
+  "devDependencies": {
+    "@chatie/eslint-config": "^0.12.4",
+    "@chatie/tsconfig": "^0.16.2",
+    "shx": "^0.3.3"
+  },
+  "publishConfig": {
+    "tag": "next"
+  }
+}
