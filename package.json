@@ -33,6 +33,7 @@
     "wechaty": ">=0.56"
   },
   "dependencies": {
+    "lodash": "^4.17.21",
     "nedb-promises": "^5.0.0",
     "qrcode-terminal": "^0.12.0",
     "random-sampler": "^0.1.1",
@@ -42,6 +43,7 @@
   "devDependencies": {
     "@chatie/eslint-config": "^0.12.4",
     "@chatie/tsconfig": "^0.16.2",
+    "@types/lodash": "^4.14.172",
     "shx": "^0.3.3"
   },
   "publishConfig": {

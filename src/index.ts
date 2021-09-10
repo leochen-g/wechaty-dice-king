@@ -3,6 +3,7 @@ import { Wechaty, WechatyPlugin, ScanStatus, log, Contact, Message, Room } from 
 import { filterMsg } from './service/directive'
 import { contactSay, Ireply, delay, roomSay } from './service/talker'
 import { initCard } from './event/drawEvent'
+import { initMod } from './event/helpEvent'
 
 export interface DiceBotConfig {
   quickModel?: boolean;
@@ -77,21 +78,19 @@ async function dispatchRoomFilterByMsgType (that:any, room:Room, msg:Message) {
   const type = msg.type()
   const userSelfName = that.userSelf().name()
   let content = ''
-  let mentionSelf: boolean = false
   switch (type) {
-    case that.Message.Type.Text:
+    case that.Message.Type.Text: {
       content = msg.text()
       log.info(`群名: ${roomName} 发消息人: ${contactName} 内容: ${content}`)
-      mentionSelf = content.includes(`@${userSelfName}`)
-      if (mentionSelf) {
-        content = content.replace(/@[^,，：:\s@]+/g, '').trim()
-        const replys: Ireply[] = await filterMsg({ contact, msg: content, name: contactName, self: userSelfName })
-        for (const reply of replys) {
-          await delay(1000)
-          await roomSay(room, contact, reply)
-        }
+      const mentionSelf = content.includes(`@${userSelfName}`)
+      content = mentionSelf ? content.replace(/@[^,，：:\s@]+/g, '').trim() : content.trim()
+      const replys: Ireply[] = await filterMsg({ contact, msg: content, name: contactName, room, self: userSelfName  })
+      for (const reply of replys) {
+        await delay(1000)
+        await roomSay(room, contact, reply)
       }
       break
+    }
     default:
       break
   }
@@ -129,6 +128,12 @@ export function diceBot (
     return ''
   }).catch(e => {
     log.info('加载牌堆失败', e)
+  })
+  initMod().then(res => {
+    log.info('加载词条成功', res)
+    return ''
+  }).catch(e => {
+    log.info('加载词条失败', e)
   })
   return function (wechaty: Wechaty) {
     wechaty.on('message', onMessage)

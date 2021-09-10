@@ -2,6 +2,7 @@ const operators = new Map<string, number>([
   ['+', 1],
   ['-', 1],
   ['*', 2],
+  ['X', 2],
   ['/', 2],
   ['D', 3],
   ['d', 3],
@@ -84,7 +85,7 @@ const rpn = (tokens: string[]): string[] => {
   return result
 }
 
-const calc = (rpnTokens: string[], vars: Map<string, number>): number => {
+const calc = (rpnTokens: string[], vars: Map<string, number>): string | number | undefined => {
   const stack: (string | number)[] = []
   for (const token of rpnTokens) {
     if (operators.get(token)) {
@@ -98,6 +99,7 @@ const calc = (rpnTokens: string[], vars: Map<string, number>): number => {
           stack.push((v1 - v2))
           break
         case '*':
+        case 'X':
           stack.push((v1 * v2))
           break
         case '/':
@@ -105,7 +107,13 @@ const calc = (rpnTokens: string[], vars: Map<string, number>): number => {
           break
         case 'D':
         case 'd':
-          stack.push(dice(v1, v2))
+          if (v1 > 100) {
+            stack.push('【太多骰子了，被淹没了也骰不出来】')
+          } else if (v2 > 1000) {
+            stack.push('【让我数数骰子有多少面先~1...2...】')
+          } else {
+            stack.push(dice(v1, v2))
+          }
           break
       }
     } else {
@@ -121,7 +129,7 @@ const calc = (rpnTokens: string[], vars: Map<string, number>): number => {
       }
     }
   }
-  return Number(stack.pop())
+  return stack.pop()
 }
 
-export const exec = (exp: string, vars: Map<string, number>): number => calc(rpn(tokens(exp)), vars)
+export const exec = (exp: string, vars: Map<string, number>): number | string | undefined => calc(rpn(tokens(exp)), vars)

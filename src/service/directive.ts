@@ -1,12 +1,30 @@
-import { log, Contact } from 'wechaty'
+import { log, Contact, Room } from 'wechaty'
 import { Ireply, contactSay, delay } from './talker'
 import { drawEventDispatch } from '../event/drawEvent'
+import { drawModDispatch } from '../event/helpEvent'
+import { exec } from '../utils/dicBot'
+import { deckClear, deckNewCard, deckReset, getDeckInfo, setDeckCard } from '../event/deckEvent'
+
+export type IFilterMsg = {
+  eName: string,
+  msg: string,
+  name: string,
+  self: string,
+  contact: Contact,
+  room?: Room
+}
 
 const directiveList = [
+  { event:'drawPrivateCard', key: ['.drawh', '。drawh'] },
   { event:'drawCard', key: ['.draw', '。draw'] },
-  { event:'drawPrivateCard', key: ['.hdraw', '。hdraw'] },
-  { event: 'helpEvent', key: ['.help'] },
-  { event: 'rollNum', key: ['.r'] },
+  { event: 'helpEvent', key: ['.help', '。help'] },
+  { event: 'rollNum', key: ['.r', '。r'] },
+  { event: 'todayCharacter', key: ['.jrrp', '。jrrp'] },
+  { event: 'deckNew', key: ['.deck new', '.decknew', '。deck new', '。decknew'] },
+  { event: 'deckSet', key: ['.deck set', '.deckset', '。deck set', '。deckset'] },
+  { event: 'deckShow', key: ['.deck show', '。deck show', '.deckshow', '。deckshow'] },
+  { event: 'deckReset', key: ['.deck reset', '。deck reset', '.deckreset', '。deckreset'] },
+  { event: 'deckClear', key: ['.deck clr', '。deck clr', '.deckclr', '。deckclr'] },
 ]
 
 /**
@@ -25,36 +43,77 @@ function msgArr (type = 1, content = '', url = '') {
  * @param {string} eName 事件名称
  * @param {string} msg 消息内容
  * @param name
- * @param self 骰娘名称
+ * @param self 骰王名称
  * @param contact
+ * @param room
  * @returns {string} 内容
  */
-async function dispatchDirectiveContent (eName:string, msg:string, name:string, self:string, contact: Contact) {
-  const content: any = ''
-  const type = 1
+async function dispatchDirectiveContent ({ eName, msg, name, self, contact, room }: IFilterMsg) {
+  let content: any = ''
+  let type = 1
   const url = ''
+  const isRoom = !!room
+  const roomName = room ? await room.topic() : ''
   switch (eName) {
+    // 骰子
     case 'drawCard': {
       log.info('抽取卡牌', msg)
-      const key = msg.trim()
-      return  drawEventDispatch(key, name, self)
+      return  drawEventDispatch({  msg,  name, room, self  })
     }
+    // 私聊骰子
     case 'drawPrivateCard': {
       log.info('暗抽卡牌', msg)
-      const key = msg.trim()
-      const replys =  await drawEventDispatch(key, name, self)
+      const replys =  await drawEventDispatch({  msg,  name, room, self })
       for (const reply of replys) {
         await delay(1000)
         await contactSay(contact, reply)
       }
       return []
     }
-    case 'helpEvent':
-      log.info('帮助指令')
+    // 帮助
+    case 'helpEvent': {
+      log.info('帮助指令', msg)
+      return  drawModDispatch(msg, name, self)
+    }
+    // 今日人品
+    case 'todayCharacter':
+      type = 1
+      content = `${name} 今日的人品值是${exec('1d100', new Map())}`
       break
-    case 'rowNum':
-      log.info('投掷骰子')
+    // 随机投掷
+    case 'rollNum': {
+      type = 1
+      if (msg) {
+        content = `${name} 掷骰: ${msg}=${exec(msg, new Map())}`
+      } else {
+        content = `${name} 掷骰: D100=${exec('1d100', new Map())}`
+      }
       break
+    }
+    case 'deckNew': {
+      const res = await deckNewCard({ msg, name, room, self  })
+      return res
+    }
+    case 'deckShow': {
+      const res = await getDeckInfo({ isRoom, name, room, self  })
+      return res
+    }
+    case 'deckReset': {
+      if (!msg) {
+        content = '未指定牌堆名'
+      } else {
+        const res = await deckReset({ isRoom,  msg, name, roomName, self })
+        return res
+      }
+      break
+    }
+    case 'deckClear': {
+      const isDeleteAll = !msg
+      return await deckClear({ deleteAll: isDeleteAll, isRoom,  msg, name, roomName })
+    }
+    case 'deckSet': {
+      return await setDeckCard({ isRoom, msg, name, roomName,  self })
+    }
     default:
       break
   }
@@ -68,16 +127,17 @@ async function dispatchDirectiveContent (eName:string, msg:string, name:string, 
  * @param name
  * @param self
  * @param contact
+ * @param room 群组
  * @returns {number} 返回回复内容
  */
-export async function filterMsg ({ msg, name, self, contact }: {msg:string, name: string, self:string, contact: Contact }) {
+export async function filterMsg ({ msg, name, self, contact, room }: {msg:string, name: string, self:string, contact: Contact, room?: Room }) {
   let msgArr: Ireply[] = []
   for (const item of directiveList) {
     for (const key of item.key) {
       if (msg.startsWith(key)) {
-        msg = msg.replace(key, '')
+        msg = msg.replace(key, '').trim()
         log.info('匹配到指令', item.event)
-        msgArr = await dispatchDirectiveContent(item.event, msg, name, self, contact)
+        msgArr = await dispatchDirectiveContent({ contact, eName: item.event,  msg, name, room, self  })
       }
     }
   }
@@ -87,10 +147,3 @@ export async function filterMsg ({ msg, name, self, contact }: {msg:string, name
     return  [{ content: '', type: 1,  url: '' }]
   }
 }
-
-// getCard('高考', 'ALI', 'leo').then(res => {
-//   console.log('', JSON.stringify(res))
-// })
-//
-// const vars = new Map<string, number>()
-// console.log('res', exec('d1000+d1000+d1000+d1000+d1000+d1000+d1000+d1000', vars))

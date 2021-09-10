@@ -1,0 +1,24 @@
+{
+	"creat_time": 1631246495139,
+	"decks": {
+		"抽奖": {
+			"idxs": [
+				3,
+				2,
+				0,
+				1
+			],
+			"meta": [
+				"leo助手",
+				"Leo_chen",
+				"小助手",
+				"嗯哼"
+			],
+			"size": 4
+		}
+	},
+	"name": "测试2",
+	"observer": [],
+	"type": "simple",
+	"update_time": 1631255251050
+}
