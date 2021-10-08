@@ -2,22 +2,30 @@
   "name": "wechaty-dice-bot",
   "version": "1.0.0",
   "description": "Wechaty 卡牌抽取游戏插件，类似骰娘https://v2docs.kokona.tech/zh/latest/CookBook.html",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "typings": "./dist/esm/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
+    }
+  },
   "scripts": {
+    "build": "tsc && tsc -p tsconfig.cjs.json",
     "clean": "shx rm -fr dist/*",
+    "dist": "npm-run-all clean build",
+    "dist:commonjs": "jq -n \"{ type: \\\"commonjs\\\" }\" > dist/cjs/package.json",
     "start": "ts-node test/index.ts",
+    "start:common": "node test/dic.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dist": "npm run clean && tsc",
     "pack": "npm pack",
+    "lint": "npm run lint:es && npm run lint:ts",
+    "lint:md": "markdownlint README.md",
+    "lint:ts": "tsc --isolatedModules --noEmit",
     "lint:es": "eslint --ignore-pattern tests/fixtures/ '{bin,examples,scripts,src,tests}/**/*.ts'"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/leochen-g/wechaty-dice-bot.git",
-    "lint": "npm run lint:es && npm run lint:ts && npm run lint:md",
-    "lint:md": "markdownlint README.md",
-    "lint:ts": "tsc --noEmit"
+    "url": "git+https://github.com/leochen-g/wechaty-dice-bot.git"
   },
   "peerDependencies": {
     "wechaty": "*"
@@ -29,12 +37,11 @@
   },
   "homepage": "https://github.com/leochen-g/wechaty-dice-bot#readme",
   "engines": {
-    "node": ">= 12",
-    "wechaty": ">=0.56"
+    "wechaty": ">=0.69",
+    "node": ">=14"
   },
   "dependencies": {
     "lodash": "^4.17.21",
-    "nedb-promises": "^5.0.0",
     "qrcode-terminal": "^0.12.0",
     "random-sampler": "^0.1.1",
     "wechaty": "^0.68.1",
@@ -42,11 +49,28 @@
   },
   "devDependencies": {
     "@chatie/eslint-config": "^0.12.4",
+    "@chatie/git-scripts": "^0.6.2",
+    "@chatie/semver": "^0.4.7",
     "@chatie/tsconfig": "^0.16.2",
     "@types/lodash": "^4.14.172",
-    "shx": "^0.3.3"
+    "@types/ms": "^0.7.31",
+    "@typescript-eslint/parser": "^4.32.0",
+    "npm-run-all": "^4.1.5",
+    "shx": "^0.3.3",
+    "ts-node": "^10.2.1",
+    "typescript": "^4.4.3"
   },
+  "files": [
+    "bin/",
+    "dist/",
+    "src/"
+  ],
   "publishConfig": {
     "tag": "next"
+  },
+  "git": {
+    "scripts": {
+      "pre-push": "npx git-scripts-pre-push"
+    }
   }
 }

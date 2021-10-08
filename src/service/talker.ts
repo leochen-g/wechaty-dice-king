@@ -27,7 +27,7 @@ export async function delay (ms:number) {
  * @param {*} msg
  * type 1 文字 2 图片url 3 图片base64 4 url链接 5 小程序  6 名片 7 本地文件
  */
-export async function roomSay (room: Room, contact: Contact, msg: Ireply) {
+export async function roomSay (room: Room, contact: Contact | '', msg: Ireply) {
   try {
     if (msg.type === 1 && msg.content) {
       // 文字

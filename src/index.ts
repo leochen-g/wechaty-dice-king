@@ -1,4 +1,4 @@
-import { generate } from 'qrcode-terminal'
+import qrTerminal from 'qrcode-terminal'
 import { Wechaty, WechatyPlugin, ScanStatus, log, Contact, Message, Room } from 'wechaty'
 import { filterMsg } from './service/directive'
 import { contactSay, Ireply, delay, roomSay } from './service/talker'
@@ -87,7 +87,7 @@ async function dispatchRoomFilterByMsgType (that:any, room:Room, msg:Message) {
       const replys: Ireply[] = await filterMsg({ contact, msg: content, name: contactName, room, self: userSelfName  })
       for (const reply of replys) {
         await delay(1000)
-        await roomSay(room, contact, reply)
+        await roomSay(room, '', reply)
       }
       break
     }
@@ -96,25 +96,29 @@ async function dispatchRoomFilterByMsgType (that:any, room:Room, msg:Message) {
   }
 }
 
-async function onLogin (user: Contact) {
+function onLogin (user: Contact) {
   log.info(`骰王助手${user}登录了`)
 }
 
-async function onLogout (user: Contact) {
+function onLogout (user: Contact) {
   log.info(`骰王助手${user}已登出`)
 }
 
 /**
  * 扫描登录，显示二维码
  */
-async function onScan (qrcode:string, status: ScanStatus) {
-  generate(qrcode)
-  log.info('扫描状态', status)
-  const qrImgUrl = [
-    'https://api.qrserver.com/v1/create-qr-code/?data=',
-    encodeURIComponent(qrcode),
-  ].join('')
-  log.info(qrImgUrl)
+function onScan (qrcode:string, status: ScanStatus) {
+  if (status === ScanStatus.Waiting || status === ScanStatus.Timeout) {
+    log.info('扫描状态', status)
+    qrTerminal.generate(qrcode)
+    const qrImgUrl = [
+      'https://wechaty.github.io/qrcode/',
+      encodeURIComponent(qrcode),
+    ].join('')
+    log.info(qrImgUrl)
+  } else {
+    log.info('WechatyDiceBot', 'QRCodeTerminal onScan: %s(%s)', ScanStatus[status], status)
+  }
 }
 
 export function diceBot (
@@ -136,11 +140,11 @@ export function diceBot (
     log.info('加载词条失败', e)
   })
   return function (wechaty: Wechaty) {
-    wechaty.on('message', onMessage)
     if (config.quickModel) {
       wechaty.on('scan', onScan)
       wechaty.on('login', onLogin)
       wechaty.on('logout', onLogout)
     }
+    wechaty.on('message', onMessage)
   }
 }

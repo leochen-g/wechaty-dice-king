@@ -1,9 +1,10 @@
 import { log, Contact, Room } from 'wechaty'
-import { Ireply, contactSay, delay } from './talker'
+import { Ireply, contactSay, delay, roomSay } from './talker'
 import { drawEventDispatch } from '../event/drawEvent'
 import { drawModDispatch } from '../event/helpEvent'
 import { exec } from '../utils/dicBot'
-import { deckClear, deckNewCard, deckReset, getDeckInfo, setDeckCard } from '../event/deckEvent'
+import { deckClear, deckHelp, deckNewCard, deckReset, getDeckInfo, setDeckCard } from '../event/deckEvent'
+import { addOb, clearOb, getObList, obGetPrivateCard, updateObserverStats } from '../event/obEvent'
 
 export type IFilterMsg = {
   eName: string,
@@ -15,16 +16,23 @@ export type IFilterMsg = {
 }
 
 const directiveList = [
-  { event:'drawPrivateCard', key: ['.drawh', '。drawh'] },
-  { event:'drawCard', key: ['.draw', '。draw'] },
-  { event: 'helpEvent', key: ['.help', '。help'] },
-  { event: 'rollNum', key: ['.r', '。r'] },
-  { event: 'todayCharacter', key: ['.jrrp', '。jrrp'] },
-  { event: 'deckNew', key: ['.deck new', '.decknew', '。deck new', '。decknew'] },
-  { event: 'deckSet', key: ['.deck set', '.deckset', '。deck set', '。deckset'] },
-  { event: 'deckShow', key: ['.deck show', '。deck show', '.deckshow', '。deckshow'] },
-  { event: 'deckReset', key: ['.deck reset', '。deck reset', '.deckreset', '。deckreset'] },
-  { event: 'deckClear', key: ['.deck clr', '。deck clr', '.deckclr', '。deckclr'] },
+  { event:'drawPrivateCard', key: ['.drawh', '。drawh'] }, // 暗抽
+  { event:'drawCard', key: ['.draw', '。draw'] }, // 抽牌
+  { event: 'helpEvent', key: ['.help', '。help'] }, // 帮助
+  { event: 'rollNum', key: ['.r', '。r'] }, // 随机数
+  { event: 'todayCharacter', key: ['.jrrp', '。jrrp'] }, // 今日人品
+  { event: 'deckNew', key: ['.deck new', '.decknew', '。deck new', '。decknew'] }, // 创建牌实例
+  { event: 'deckSet', key: ['.deck set', '.deckset', '。deck set', '。deckset'] }, // 设置已有牌堆为实例
+  { event: 'deckShow', key: ['.deck show', '。deck show', '.deckshow', '。deckshow'] }, // 显示实例
+  { event: 'deckReset', key: ['.deck reset', '。deck reset', '.deckreset', '。deckreset'] }, // 重置牌堆实例
+  { event: 'deckClear', key: ['.deck clr', '。deck clr', '.deckclr', '。deckclr'] }, // 清除牌堆实例
+  { event: 'deckHelp', key: ['.deck', '。deck'] }, // 清除牌堆实例
+  { event: 'obexit', key: ['.ob exit', '。ob exit'] }, // 退出旁观
+  { event: 'oblist', key: ['.ob list', '。ob list'] }, // 查看旁观
+  { event: 'obclr', key: ['.ob clr', '。ob clr'] }, // 清除旁观
+  { event: 'obon', key: ['.ob on', '。ob on'] }, // 开启旁观
+  { event: 'oboff', key: ['.ob off', '。ob off'] }, // 关闭旁观
+  { event: 'obadd', key: ['.ob', '。ob'] }, // 添加旁观
 ]
 
 /**
@@ -68,6 +76,10 @@ async function dispatchDirectiveContent ({ eName, msg, name, self, contact, room
         await delay(1000)
         await contactSay(contact, reply)
       }
+      if (room) {
+        await roomSay(room, '', { content: `${name}抽了一张手牌`, type: 1 }) // 群中反馈结果
+        await obGetPrivateCard({ replys, room, roomName,  userName:name }) // 旁观者获取暗抽结果
+      }
       return []
     }
     // 帮助
@@ -90,14 +102,17 @@ async function dispatchDirectiveContent ({ eName, msg, name, self, contact, room
       }
       break
     }
+    // 新增牌堆实例
     case 'deckNew': {
       const res = await deckNewCard({ msg, name, room, self  })
       return res
     }
+    // 展示牌堆实例
     case 'deckShow': {
       const res = await getDeckInfo({ isRoom, name, room, self  })
       return res
     }
+    // 重置牌堆实例
     case 'deckReset': {
       if (!msg) {
         content = '未指定牌堆名'
@@ -107,12 +122,41 @@ async function dispatchDirectiveContent ({ eName, msg, name, self, contact, room
       }
       break
     }
+    // 清除牌堆实例
     case 'deckClear': {
       const isDeleteAll = !msg
       return await deckClear({ deleteAll: isDeleteAll, isRoom,  msg, name, roomName })
     }
+    // 设置牌堆为实例
     case 'deckSet': {
       return await setDeckCard({ isRoom, msg, name, roomName,  self })
+    }
+    case 'deckHelp': {
+      return deckHelp()
+    }
+    // 添加旁观
+    case 'obadd': {
+      return await addOb({ isRoom, name, roomName })
+    }
+    // 添加旁观
+    case 'oblist': {
+      return await getObList({ isRoom, roomName })
+    }
+    // 退出旁观
+    case 'obexit': {
+      return await clearOb({  deleteAll: false, isRoom, name, roomName })
+    }
+    // 清除旁观
+    case 'obeclr': {
+      return await clearOb({  deleteAll: true, isRoom, name, roomName })
+    }
+    // 关闭旁观
+    case 'oboff': {
+      return await updateObserverStats({ isRoom,  name,  offOb: true, roomName   })
+    }
+    // 清除旁观
+    case 'obon': {
+      return await updateObserverStats({  isRoom,  name,  offOb: false, roomName })
     }
     default:
       break
