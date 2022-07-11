@@ -1,4 +1,5 @@
-import { FileBox, UrlLink, MiniProgram, Room, Contact, log }  from  'wechaty'
+import {  Room, Contact, log }  from  'wechaty'
+import { FileBox } from 'file-box'
 
 export interface Ireply {
   type: number,
@@ -50,26 +51,7 @@ export async function roomSay (room: Room, contact: Contact | '', msg: Ireply) {
       }
       await delay(500)
       await room.say(obj)
-    } else if (msg.type === 4 && msg.url && msg.title && msg.description) {
-      log.info('in url')
-      const url = new UrlLink({
-        description: msg.description,
-        thumbnailUrl: msg.thumbUrl,
-        title: msg.title,
-        url: msg.url,
-      })
-      await room.say(url)
-    } else if (msg.type === 5 && msg.appid && msg.title && msg.pagePath && msg.description && msg.thumbUrl && msg.thumbKey) {
-      const miniProgram = new MiniProgram({
-        appid: msg.appid,
-        description: msg.description,
-        pagePath: msg.pagePath,
-        thumbKey: msg.thumbKey,
-        thumbUrl: msg.thumbUrl,
-        title: msg.title,
-      })
-      await room.say(miniProgram)
-    } else if (msg.type === 7 && msg.url) {
+    }  else if (msg.type === 7 && msg.url) {
       const obj = FileBox.fromFile(msg.url)
       if (contact) {
         await room.say('', contact)
@@ -108,24 +90,6 @@ export async function contactSay (contact: Contact, msg: Ireply, isRoom: boolean
       // bse64文件
       const obj = FileBox.fromDataURL(msg.url, 'user-avatar.jpg')
       await contact.say(obj)
-    } else if (msg.type === 4 && msg.url && msg.title && msg.description && msg.thumbUrl) {
-      const url = new UrlLink({
-        description: msg.description,
-        thumbnailUrl: msg.thumbUrl,
-        title: msg.title,
-        url: msg.url,
-      })
-      await contact.say(url)
-    } else if (msg.type === 5 && msg.appid && msg.title && msg.pagePath && msg.description && msg.thumbUrl && msg.thumbKey) {
-      const miniProgram = new MiniProgram({
-        appid: msg.appid,
-        description: msg.description,
-        pagePath: msg.pagePath,
-        thumbKey: msg.thumbKey,
-        thumbUrl: msg.thumbUrl,
-        title: msg.title,
-      })
-      await contact.say(miniProgram)
     } else if (msg.type === 7 && msg.url) {
       // 本地文件
       const obj = FileBox.fromFile(msg.url)

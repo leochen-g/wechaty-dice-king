@@ -3,11 +3,12 @@ import { exec } from './dicBot'
 import Sampler from 'random-sampler'
 import { Ireply } from '../service/talker'
 import path from 'path'
+import RootPath  from 'app-root-path'
 import fs from 'fs'
 import { upCreatDeck } from '../event/deckEvent'
 
 const imagePath = path.join(__dirname, '../data/image')
-const userImagePath = path.join(__dirname, '../../data/image')
+const userImagePath = path.join(RootPath.path, '/data/image')
 
 // 数组元素叠加 [1,2,3,4,,] -> [1,3,6,10,,,,]
 // @ts-ignore
@@ -88,7 +89,7 @@ function getWeightArray (a: Array<any>): { weight: any[], card: any[] } {
  * @param element
  */
 export function getWeight (element:any) {
-  const weightArray: string[] = element.match(/^::[1-9]\d*::/g) || ['1']
+  const weightArray: string[] = element.match(/^::[1-9]\d*::/g) || ['::1::']
   const weightNum: string = weightArray[0].replace(/:/g, '')
   return parseInt(weightNum)
 }
@@ -99,7 +100,7 @@ export function getWeight (element:any) {
  */
 
 export function getWeightElements (element: any): {element: string, weight: number} {
-  const weightArray: string[] = element.match(/^::[1-9]\d*::/g) || ['1']
+  const weightArray: string[] = element.match(/^::[1-9]\d*::/g) || ['::1::']
   const weightNum: string = weightArray[0].replace(/:/g, '')
   return {
     element: element.replace(weightArray[0], ''),
@@ -122,7 +123,7 @@ export function randomCard (a: Array<any>) {
   // const arrIndex = getArrIndex(random, weightArray)
   const sampler = new Sampler()
   const result = sampler.sample(a, 1, getWeight)
-  const weightArray: string[] = result[0].match(/^::[1-9]\d*::/g) || ['1']
+  const weightArray: string[] = result[0].match(/^::[1-9]\d*::/g) || ['::1::']
   const weight = weightArray[0]
   return result[0].replace(weight, '')
 }
@@ -146,7 +147,7 @@ export function replaceHolder (str: any, prefix: any, surfix: any, obj: any, nam
     if (p1 === -1) break
 
     if (p1 > p2) ret += str.substring(p2, p1)
-
+    console.log('****', str,  surfix, p1, )
     p2 = str.indexOf(surfix, p1 + prefix.length)
     if (p2 === -1) break
 
@@ -155,6 +156,7 @@ export function replaceHolder (str: any, prefix: any, surfix: any, obj: any, nam
     let val = obj
     let temp = ''
     try {
+      console.log('8888888', holder, val[holder])
       temp = needRandom ? randomCard(val[holder]) : val[holder]
       val = replaceAllPlaceholder(obj, temp, name, self, needRandom)
     } catch (E) {
@@ -187,6 +189,7 @@ export function replaceCoc (str: any, prefix: any, surfix: any) {
   let ret = ''
   let p1 = 0
   let p2 = 0
+  console.log('str', str)
   while (true) {
     p1 = str.indexOf(prefix, p2) // 匹配不到前缀直接返回
     if (p1 === -1) break
@@ -196,7 +199,7 @@ export function replaceCoc (str: any, prefix: any, surfix: any) {
     p2 = str.indexOf(surfix, p1 + prefix.length)
     if (p2 === -1) break
     let holder = str.substring(p1 + prefix.length, p2)
-    if (!holder.includes('d')) {
+    if (!holder.includes('d') && !holder.includes('D')) {
       ret += prefix + holder
       continue
     }
@@ -230,7 +233,7 @@ export function replaceCoc (str: any, prefix: any, surfix: any) {
  * @param needRandom 是否需要随机
  */
 export function replaceAllPlaceholder (allCard: { [index: string]: any }, replaceStr: string, name: string, self: string, needRandom?:boolean) {
-  let temp = replaceStr.replace('{self}', self).replace('{at}', `『${name}』`)
+  let temp = replaceStr.replace('{self}', self).replaceAll('{at}', `『${name}』`)
   temp = replaceHolder(temp, '{%', '}', allCard, name, self, needRandom)
   temp = replaceHolder(temp, '{', '}', allCard, name, self, needRandom)
   temp = replaceCoc(temp, '[', ']')
@@ -265,8 +268,10 @@ export function replaceImage (str: any, prefix: any, surfix: any) {
       })
     } else {
       let path = holder.startsWith('/') ? imagePath + holder : imagePath + '/' + holder
+      console.log('存在', fs.existsSync(path))
       if (!fs.existsSync(path)) {
-        path = holder.startsWith('/') ? userImagePath + holder : imagePath + '/' + holder
+        console.log('userImagePath', userImagePath)
+        path = holder.startsWith('/') ? userImagePath + holder : userImagePath + '/' + holder
       }
       replys.push({
         type: 7,
@@ -303,7 +308,8 @@ export function replaceImage (str: any, prefix: any, surfix: any) {
  */
 export function generatorCard (allCard: { [index: string]: any }, key: string, name: string, self: string) {
   const card = randomCard(allCard[key])
-  const replace = replaceAllPlaceholder(allCard, card, name, self, true).replace('<', '【').replace('>', '】')
+  const replace = replaceAllPlaceholder(allCard, card, name, self, true).replaceAll('<', '【').replaceAll('>', '】')
+  console.log('replace', replace)
   return replaceImage(replace, '[CQ:image,file=', ']')
 }
 
@@ -316,7 +322,7 @@ export function generatorCard (allCard: { [index: string]: any }, key: string, n
  */
 export function generatorMod (allCard: { [index: string]: any }, key: string, name: string, self: string) {
   const card = allCard[key]
-  const replace = replaceAllPlaceholder(allCard, card, name, self, false).replace('<', '【').replace('>', '】')
+  const replace = replaceAllPlaceholder(allCard, card, name, self, false).replaceAll('<', '【').replaceAll('>', '】')
   return replaceImage(replace, '[CQ:image,file=', ']')
 }
 

@@ -3,6 +3,7 @@ import fs from 'fs'
 import path from 'path'
 import { log, Room } from 'wechaty'
 import { loadFileContent, mkdirsSync } from '../utils'
+import RootPath from "app-root-path"
 
 /**
  * 指令参数为空 默认回复
@@ -75,7 +76,7 @@ export async function getObList ({ isRoom, roomName }:{isRoom: boolean, roomName
  * @param roomName 群名
  */
 export async function getObservers ({ roomName }:{roomName: string}) {
-  const deckPath = path.join(__dirname, '../../data/session/room')
+  const deckPath = path.join(RootPath.path, '/data/session/room')
   const fileName = `/${roomName}.json`
   if (fs.existsSync(deckPath + fileName)) {
     const defaultContent  = await loadFileContent({ path: deckPath + fileName })
@@ -92,7 +93,7 @@ export async function getObservers ({ roomName }:{roomName: string}) {
  * @param roomName 群名
  */
 export async function updateObserver ({ name, isDelete = false, isDeleteAll = false, roomName }: {name:string, isDelete: boolean, isDeleteAll: boolean, roomName: string }): Promise<Ireply[]> {
-  const deckPath = path.join(__dirname, '../../data/session/room')
+  const deckPath = path.join(RootPath.path, '/data/session/room')
   const fileName = `/${roomName}.json`
   try {
     if (fs.existsSync(deckPath + fileName)) {
@@ -156,7 +157,7 @@ export async function updateObserverStats ({ name, roomName, offOb = false, isRo
       type: 1,
     }]
   }
-  const deckPath = path.join(__dirname, '../../data/session/room')
+  const deckPath = path.join(RootPath.path, '/data/session/room')
   const fileName = `/${roomName}.json`
   try {
     if (fs.existsSync(deckPath + fileName)) {

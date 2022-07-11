@@ -5,6 +5,7 @@ import path from 'path'
 import { log } from 'wechaty'
 import { getAllDrawDirective, getUserDrawDirective } from './drawEvent'
 import { chunk } from 'lodash'
+import RootPath from "app-root-path";
 
 /**
  * 指令参数为空 默认回复
@@ -78,7 +79,7 @@ export async function initMod (): Promise<{} | any> {
   try {
     const cardPath = path.join(__dirname, '../mod')
     modMap = await loadMod(cardPath, false)
-    const userCardPath = path.join(__dirname, '../../mod')
+    const userCardPath = path.join(RootPath.path, '/mod')
     if (fs.existsSync(userCardPath)) {
       userModMap = await loadMod(userCardPath, true)
     }
