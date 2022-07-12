@@ -43,11 +43,11 @@ async function dispatchFriendFilterByMsgType (that:any, msg:Message) {
     const contact = msg.talker() // 发消息人
     const name = contact.name()
     const isOfficial = contact.type() === that.Contact.Type.Official
-    const userSelfName = that.userSelf().name()
+    const userSelfName = that.currentUser.name()
     let content = ''
     switch (type) {
       case that.Message.Type.Text:
-        content = msg.text()
+        content = msg.text().trim()
         if (!isOfficial) {
           log.info(`发消息人${name}:${content}`)
           const replys: Ireply[] = await filterMsg({ contact, msg: content,  name, self: userSelfName  })
@@ -76,7 +76,7 @@ async function dispatchRoomFilterByMsgType (that:any, room:Room, msg:Message) {
   const contactName = contact.name()
   const roomName = await room.topic()
   const type = msg.type()
-  const userSelfName = that.userSelf().name()
+  const userSelfName = that.currentUser.name()
   let content = ''
   switch (type) {
     case that.Message.Type.Text: {

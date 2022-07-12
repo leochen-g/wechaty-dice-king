@@ -1,4 +1,5 @@
 import { generatorCard, generatorCustomCard } from '../utils'
+import RootPath  from 'app-root-path'
 import { Ireply } from '../service/talker'
 import fs from 'fs'
 import path from 'path'
@@ -51,7 +52,7 @@ export async function initCard (): Promise<{} | any> {
   try {
     const cardPath = path.join(__dirname, '../cards')
     cardMap = await loadDeck(cardPath, false)
-    const userCardPath = path.join(__dirname, '../../PublicDeck')
+    const userCardPath = path.join(RootPath.path, '/PublicDeck')
     if (fs.existsSync(userCardPath)) {
       userCardMap = await loadDeck(userCardPath, true)
     }
@@ -81,14 +82,20 @@ async function getCard ({ key, name, self, room }:{key: any, name: string, self:
   const allMap = Object.assign({}, cardMap, userCardMap)
   // 用户实例牌组
   const deckContent: { [index: string]: any } = await getDeckContent({ isRoom, name: isRoom ? roomName : name  })
+  log.info('获取用户牌堆实例', deckContent)
   const deckKeys = Object.keys(deckContent).filter((item:any) => {
     return !item.startsWith('_')
   })
+  log.info('1111获取用户牌堆实例')
+
   if (deckKeys.includes(key)) { // 优先实例牌组
+    log.info('优先实例牌组')
     return await generatorCustomCard({ allCard: allMap, deckContent: deckContent[key], isRoom, keyword: key,  name,  roomName, self })
   } else if (defaultKeys.includes(key)) { // 其次读取内置牌堆
+    log.info('内置牌堆')
     return generatorCard(allMap, key, name, self)
   } else if (userKeys.includes(key)) { // 最后是用户扩展牌堆
+    log.info('获取用户扩展牌堆')
     return generatorCard(allMap, key, name, self)
   } else {
     return [{

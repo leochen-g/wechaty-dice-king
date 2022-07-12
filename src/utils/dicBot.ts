@@ -18,7 +18,7 @@ export const dice = (n: number, d: number): number => {
 
 const tokens = (src: string): string[] => {
   const result: string[] = ['']
-  src = src.startsWith('d') ? `1${src}` : src
+  src = src.startsWith('d') || src.startsWith('D') ? `1${src}` : src
   for (const c of src) {
     if (operators.get(c) || c === '(' || c === ')') {
       if (result[result.length - 1].length > 0 && isNaN(Number(result[result.length - 1])) && (c === 'D' || c === 'd')) {

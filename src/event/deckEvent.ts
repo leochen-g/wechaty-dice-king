@@ -1,4 +1,5 @@
 import {  getWeightElements, mkdirsSync, loadFileContent } from '../utils'
+import RootPath  from 'app-root-path'
 import { Ireply } from '../service/talker'
 import fs from 'fs'
 import path from 'path'
@@ -140,7 +141,7 @@ export async function newCard ({ list, name, isDefault = false, isRoom  }: { lis
  * @param deleteAll
  */
 export async function upCreatDeck ({ name, isRoom, content, deckKey, isDelete = false, deleteAll = false }: {deleteAll?: boolean, name:string, isRoom: boolean, content: {}, deckKey: any, isDelete?:boolean }) {
-  const deckPath = path.join(__dirname, `../../data/session/${isRoom ? 'room' : 'friend'}`)
+  const deckPath = path.join(RootPath.path, `/data/session/${isRoom ? 'room' : 'friend'}`)
   const fileName = `/${name}.json`
   try {
     if (fs.existsSync(deckPath + fileName)) {
@@ -175,10 +176,11 @@ export async function upCreatDeck ({ name, isRoom, content, deckKey, isDelete = 
  * @param isRoom
  */
 export async function  getDeckContent ({ name, isRoom }:{name: string, isRoom: boolean }) {
-  const deckPath = path.join(__dirname, `../../data/session/${isRoom ? 'room' : 'friend'}`)
+  const deckPath = path.join(RootPath.path, `/data/session/${isRoom ? 'room' : 'friend'}`)
   const fileName = `/${name}.json`
   const defaultContent  = await loadFileContent({ path: deckPath + fileName })
-  return defaultContent.decks
+  console.log('defaultContent', defaultContent)
+  return defaultContent?.decks || {}
 }
 
 /**
