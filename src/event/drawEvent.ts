@@ -1,6 +1,6 @@
 import { generatorCard, generatorCustomCard } from '../utils'
 import RootPath  from 'app-root-path'
-import { Ireply } from '../service/talker'
+import type { Ireply } from '../service/talker'
 import fs from 'fs'
 import path from 'path'
 import { log, Room } from 'wechaty'
@@ -30,7 +30,7 @@ async function loadDeck (cardPath: string, isUser: boolean = false): Promise<obj
   if (!cradFile || !cradFile.length) return {}
   let finalContent = {}
   for (let i = 0; i < cradFile.length; i++) {
-    const file = cradFile[i]
+    const file = cradFile[i] || ''
     const filePath = path.join(cardPath, file)
     const content = await import(filePath)
     finalContent = Object.assign({}, finalContent, content.default)
