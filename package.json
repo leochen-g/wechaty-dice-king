@@ -94,11 +94,6 @@
   "publishConfig": {
     "tag": "next"
   },
-  "git": {
-    "scripts": {
-      "pre-push": "npx git-scripts-pre-push"
-    }
-  },
   "_id": "wechaty-dice-king@1.0.1",
   "_commitid": "1bc5b8e"
 }
