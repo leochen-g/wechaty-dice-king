@@ -1,7 +1,7 @@
 import { log } from 'wechaty'
 import { exec } from './dicBot'
 import Sampler from 'random-sampler'
-import { Ireply } from '../service/talker'
+import type { Ireply } from '../service/talker'
 import path from 'path'
 import RootPath  from 'app-root-path'
 import fs from 'fs'
@@ -68,7 +68,7 @@ function getWeightArray (a: Array<any>): { weight: any[], card: any[] } {
   a.forEach((item, index, array: any[]) => {
     const weightNum: string[] = item.match(/^::[1-9]\d*::/g)
     if (weightNum && weightNum.length) {
-      if (weightNum[0].replace(/:/g, '')) {
+      if (weightNum[0]?.replace(/:/g, '')) {
         weightList[index] = parseInt(weightNum[0].replace(/:/g, ''))
         array[index] = item.replace(weightNum[0], '')
       } else {
@@ -90,7 +90,7 @@ function getWeightArray (a: Array<any>): { weight: any[], card: any[] } {
  */
 export function getWeight (element:any) {
   const weightArray: string[] = element.match(/^::[1-9]\d*::/g) || ['::1::']
-  const weightNum: string = weightArray[0].replace(/:/g, '')
+  const weightNum: string = weightArray[0]?.replace(/:/g, '') || '1'
   return parseInt(weightNum)
 }
 
@@ -101,7 +101,7 @@ export function getWeight (element:any) {
 
 export function getWeightElements (element: any): {element: string, weight: number} {
   const weightArray: string[] = element.match(/^::[1-9]\d*::/g) || ['::1::']
-  const weightNum: string = weightArray[0].replace(/:/g, '')
+  const weightNum: string = weightArray[0]?.replace(/:/g, '') || '1'
   return {
     element: element.replace(weightArray[0], ''),
     weight: parseInt(weightNum),
@@ -346,7 +346,7 @@ export function fuzzyQuery (list:any[], keyWord: string): any[] {
 export function getLastNumberStr (str: string):string {
   const strs = str.replace(/[^/d]/g, '|')
   const strsArr = strs.split('|')
-  return strsArr[strsArr.length - 1]
+  return strsArr[strsArr.length - 1] || ''
 }
 
 /**

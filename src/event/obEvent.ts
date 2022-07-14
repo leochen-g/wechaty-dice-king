@@ -133,7 +133,7 @@ export async function updateObserver ({ name, isDelete = false, isDeleteAll = fa
       const finalContent: { [index: string]: any, decks: {
           [index: string]: any
         } } = { creat_time: new Date().getTime(), decks: {},  name, observer: [], observerStats: true, type: 'simple', update_time: new Date().getTime()  }
-      finalContent.observer.push(name)
+      finalContent['observer'].push(name)
       fs.writeFileSync(deckPath + fileName, JSON.stringify(finalContent, null, '\t'))
       return [{ content: `${name}成功加入${roomName}的旁观√`, type: 1 }]
     }
@@ -187,7 +187,7 @@ export async function updateObserverStats ({ name, roomName, offOb = false, isRo
           [index: string]: any
         } } = { creat_time: new Date().getTime(), decks: {},  name, observer: [], observerStats: true, type: 'simple', update_time: new Date().getTime()  }
       if (!offOb) { // 关闭旁观为false
-        finalContent.observer.push(name)
+        finalContent['observer'].push(name)
         fs.writeFileSync(deckPath + fileName, JSON.stringify(finalContent, null, '\t'))
         return [{ content: `${name}成功加入${roomName}的旁观√`, type: 1 }]
       } else { // 关闭旁观为true

@@ -1,5 +1,5 @@
 import { fuzzyQuery, generatorMod } from '../utils'
-import { Ireply } from '../service/talker'
+import type { Ireply } from '../service/talker'
 import fs from 'fs'
 import path from 'path'
 import { log } from 'wechaty'
@@ -57,7 +57,7 @@ async function loadMod (cardPath: string, isUser: boolean = false): Promise<obje
   if (!cradFile || !cradFile.length) return {}
   let finalContent = {}
   for (let i = 0; i < cradFile.length; i++) {
-    const file = cradFile[i]
+    const file = cradFile[i] || ''
     const filePath = path.join(cardPath, file)
     const content = await import(filePath)
     finalContent = Object.assign({}, finalContent, content.default.helpdoc)
@@ -80,6 +80,7 @@ export async function initMod (): Promise<{} | any> {
     const cardPath = path.join(__dirname, '../mod')
     modMap = await loadMod(cardPath, false)
     const userCardPath = path.join(RootPath.path, '/mod')
+    console.log('userModPath', userCardPath)
     if (fs.existsSync(userCardPath)) {
       userModMap = await loadMod(userCardPath, true)
     }
@@ -140,7 +141,7 @@ export async function drawModDispatch (msg: string, name: string, self: string):
   // 内置关键词回复
   for (let i = 0; i < defaultKeyEvent.length; i++) {
     const item = defaultKeyEvent[i]
-    if (item.keyword.includes(msg)) {
+    if (item?.keyword.includes(msg)) {
       return item.method()
     }
   }

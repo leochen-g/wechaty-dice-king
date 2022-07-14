@@ -37,7 +37,13 @@ async function loadDeck (cardPath: string, isUser: boolean = false): Promise<obj
   }
   if (isUser) {
     log.info(`${new Date()}\n
-读取${cardPath}中的${cradFile.length}个文件, 共${Object.keys(finalContent).filter(item => {
+读取用户目录${cardPath}中的${cradFile.length}个文件, 共${Object.keys(finalContent).filter(item => {
+      return !item.startsWith('_')
+    }).length}个条目\n
+扩展配置读取完毕√`)
+  } else {
+    log.info(`${new Date()}\n
+读取系统内置目录${cardPath}中的${cradFile.length}个文件, 共${Object.keys(finalContent).filter(item => {
       return !item.startsWith('_')
     }).length}个条目\n
 扩展配置读取完毕√`)
@@ -53,6 +59,7 @@ export async function initCard (): Promise<{} | any> {
     const cardPath = path.join(__dirname, '../cards')
     cardMap = await loadDeck(cardPath, false)
     const userCardPath = path.join(RootPath.path, '/PublicDeck')
+    console.log('userCardPath', userCardPath)
     if (fs.existsSync(userCardPath)) {
       userCardMap = await loadDeck(userCardPath, true)
     }

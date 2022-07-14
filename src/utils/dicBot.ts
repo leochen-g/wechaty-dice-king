@@ -21,12 +21,14 @@ const tokens = (src: string): string[] => {
   src = src.startsWith('d') || src.startsWith('D') ? `1${src}` : src
   for (const c of src) {
     if (operators.get(c) || c === '(' || c === ')') {
+      // @ts-ignore
       if (result[result.length - 1].length > 0 && isNaN(Number(result[result.length - 1])) && (c === 'D' || c === 'd')) {
         result[result.length - 1] += c
       } else {
         if (result[result.length - 1] === '') {
           // 兼容 非规范的格式 例如 d100 + d200
           if (c === 'd' || c === 'D') {
+            // @ts-ignore
             if (operators.get(result[result.length - 2])) {
               result.splice(result.length - 1, 0, '1')
             }
@@ -52,6 +54,7 @@ const rpn = (tokens: string[]): string[] => {
     const opPriority = operators.get(token)
     if (opPriority) {
       while (ops.length > 0) {
+        // @ts-ignore
         if (opPriority <= (operators.get(ops[ops.length - 1]) || 0)) {
           result.push(ops.pop() || '')
         } else {

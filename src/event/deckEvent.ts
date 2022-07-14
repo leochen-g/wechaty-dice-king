@@ -1,6 +1,6 @@
 import {  getWeightElements, mkdirsSync, loadFileContent } from '../utils'
 import RootPath  from 'app-root-path'
-import { Ireply } from '../service/talker'
+import type { Ireply } from '../service/talker'
 import fs from 'fs'
 import path from 'path'
 import { Contact, log, Room } from 'wechaty'
