@@ -4,7 +4,7 @@ import fs from 'fs'
 import path from 'path'
 import { log } from 'wechaty'
 import { getAllDrawDirective, getUserDrawDirective } from './drawEvent.js'
-import { chunk } from 'lodash'
+import lodash from 'lodash'
 import RootPath from "app-root-path";
 
 /**
@@ -27,7 +27,7 @@ const defaultKeyEvent = [
     keyword: ['全牌堆列表'],
     method: () => {
       const list = getAllDrawDirective()
-      const chunks = chunk(list, 100)
+      const chunks = lodash.chunk(list, 100)
       const replys: Ireply[] = []
       chunks.forEach((item:string[], index) => {
         replys.push({ content: `【第${index + 1}页】:\n ${item.join('|')}`, type: 1 })
@@ -39,7 +39,7 @@ const defaultKeyEvent = [
     keyword: ['扩展牌堆'],
     method: () => {
       const list = getUserDrawDirective()
-      const chunks = chunk(list, 100)
+      const chunks = lodash.chunk(list, 100)
       const replys: Ireply[] = []
       chunks.forEach((item:string[], index) => {
         replys.push({ content: `【第${index + 1}页】:\n ${item.join('|')}`, type: 1 })
