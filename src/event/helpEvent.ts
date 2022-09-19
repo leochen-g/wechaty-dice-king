@@ -6,9 +6,7 @@ import { log } from 'wechaty'
 import { getAllDrawDirective, getUserDrawDirective } from './drawEvent.js'
 import lodash from 'lodash'
 import RootPath from "app-root-path";
-import {fileURLToPath} from 'url'
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+
 
 /**
  * 指令参数为空 默认回复
