@@ -6,6 +6,9 @@ import path from 'path'
 import RootPath  from 'app-root-path'
 import fs from 'fs'
 import { upCreatDeck } from '../event/deckEvent.js'
+import {fileURLToPath} from 'url'
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 const imagePath = path.join(__dirname, '../data/image')
 const userImagePath = path.join(RootPath.path, '/data/image')

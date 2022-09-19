@@ -5,6 +5,9 @@ import fs from 'fs'
 import path from 'path'
 import { log, Room } from 'wechaty'
 import { getDeckContent } from './deckEvent.js'
+import {fileURLToPath} from 'url'
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 /**
  * 指令参数为空 默认回复
