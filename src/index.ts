@@ -1,4 +1,4 @@
-import qrTerminal from 'qrcode-terminal'
+import Qrterminal from 'qrcode-terminal'
 import { Wechaty, WechatyPlugin, ScanStatus, log, Contact, Message, Room } from 'wechaty'
 import { filterMsg } from './service/directive'
 import { contactSay, Ireply, delay, roomSay } from './service/talker'
@@ -110,7 +110,7 @@ function onLogout (user: Contact) {
 function onScan (qrcode:string, status: ScanStatus) {
   if (status === ScanStatus.Waiting || status === ScanStatus.Timeout) {
     log.info('扫描状态', status)
-    qrTerminal.generate(qrcode)
+    Qrterminal.generate(qrcode)
     const qrImgUrl = [
       'https://wechaty.github.io/qrcode/',
       encodeURIComponent(qrcode),
