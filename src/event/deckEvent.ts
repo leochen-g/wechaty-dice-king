@@ -1,10 +1,10 @@
-import {  getWeightElements, mkdirsSync, loadFileContent } from '../utils'
+import {  getWeightElements, mkdirsSync, loadFileContent } from '../utils/index.js'
 import RootPath  from 'app-root-path'
-import type { Ireply } from '../service/talker'
+import type { Ireply } from '../service/talker.js'
 import fs from 'fs'
 import path from 'path'
 import { Contact, log, Room } from 'wechaty'
-import { getAllCardMap, getAllDrawDirective } from './drawEvent'
+import { getAllCardMap, getAllDrawDirective } from './drawEvent.js'
 import Sampler from 'random-sampler'
 
 /**

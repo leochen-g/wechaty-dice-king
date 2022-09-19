@@ -1,9 +1,9 @@
 import Qrterminal from 'qrcode-terminal'
 import { Wechaty, WechatyPlugin, ScanStatus, log, Contact, Message, Room } from 'wechaty'
-import { filterMsg } from './service/directive'
-import { contactSay, Ireply, delay, roomSay } from './service/talker'
-import { initCard } from './event/drawEvent'
-import { initMod } from './event/helpEvent'
+import { filterMsg } from './service/directive.js'
+import { contactSay, Ireply, delay, roomSay } from './service/talker.js'
+import { initCard } from './event/drawEvent.js'
+import { initMod } from './event/helpEvent.js'
 
 export interface DiceBotConfig {
   quickModel?: boolean;

@@ -1,10 +1,10 @@
-import { generatorCard, generatorCustomCard } from '../utils'
+import { generatorCard, generatorCustomCard } from '../utils/index.js'
 import RootPath  from 'app-root-path'
-import type { Ireply } from '../service/talker'
+import type { Ireply } from '../service/talker.js'
 import fs from 'fs'
 import path from 'path'
 import { log, Room } from 'wechaty'
-import { getDeckContent } from './deckEvent'
+import { getDeckContent } from './deckEvent.js'
 
 /**
  * 指令参数为空 默认回复

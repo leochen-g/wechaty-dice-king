@@ -1,10 +1,10 @@
 import { log, Contact, Room } from 'wechaty'
-import { Ireply, contactSay, delay, roomSay } from './talker'
-import { drawEventDispatch } from '../event/drawEvent'
-import { drawModDispatch } from '../event/helpEvent'
-import { exec } from '../utils/dicBot'
-import { deckClear, deckHelp, deckNewCard, deckReset, getDeckInfo, setDeckCard } from '../event/deckEvent'
-import { addOb, clearOb, getObList, obGetPrivateCard, updateObserverStats } from '../event/obEvent'
+import { Ireply, contactSay, delay, roomSay } from './talker.js'
+import { drawEventDispatch } from '../event/drawEvent.js'
+import { drawModDispatch } from '../event/helpEvent.js'
+import { exec } from '../utils/dicBot.js'
+import { deckClear, deckHelp, deckNewCard, deckReset, getDeckInfo, setDeckCard } from '../event/deckEvent.js'
+import { addOb, clearOb, getObList, obGetPrivateCard, updateObserverStats } from '../event/obEvent.js'
 
 export type IFilterMsg = {
   eName: string,

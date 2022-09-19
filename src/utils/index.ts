@@ -1,11 +1,11 @@
 import { log } from 'wechaty'
-import { exec } from './dicBot'
+import { exec } from './dicBot.js'
 import Sampler from 'random-sampler'
-import type { Ireply } from '../service/talker'
+import type { Ireply } from '../service/talker.js'
 import path from 'path'
 import RootPath  from 'app-root-path'
 import fs from 'fs'
-import { upCreatDeck } from '../event/deckEvent'
+import { upCreatDeck } from '../event/deckEvent.js'
 
 const imagePath = path.join(__dirname, '../data/image')
 const userImagePath = path.join(RootPath.path, '/data/image')

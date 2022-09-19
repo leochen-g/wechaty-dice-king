@@ -1,9 +1,9 @@
-import { fuzzyQuery, generatorMod } from '../utils'
-import type { Ireply } from '../service/talker'
+import { fuzzyQuery, generatorMod } from '../utils/index.js'
+import type { Ireply } from '../service/talker.js'
 import fs from 'fs'
 import path from 'path'
 import { log } from 'wechaty'
-import { getAllDrawDirective, getUserDrawDirective } from './drawEvent'
+import { getAllDrawDirective, getUserDrawDirective } from './drawEvent.js'
 import { chunk } from 'lodash'
 import RootPath from "app-root-path";
 

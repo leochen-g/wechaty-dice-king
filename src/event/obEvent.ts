@@ -1,8 +1,8 @@
-import { contactSay, delay, Ireply } from '../service/talker'
+import { contactSay, delay, Ireply } from '../service/talker.js'
 import fs from 'fs'
 import path from 'path'
 import { log, Room } from 'wechaty'
-import { loadFileContent, mkdirsSync } from '../utils'
+import { loadFileContent, mkdirsSync } from '../utils/index.js'
 import RootPath from "app-root-path"
 
 /**
