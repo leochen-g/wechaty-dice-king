@@ -5,7 +5,10 @@ import fs from 'fs'
 import path from 'path'
 import { log, Room } from 'wechaty'
 import { getDeckContent } from './deckEvent.js'
-
+import {fileURLToPath} from 'url'
+import {loadJsonFile} from 'load-json-file';
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 /**
  * 指令参数为空 默认回复
@@ -33,7 +36,7 @@ async function loadDeck (cardPath: string, isUser: boolean = false): Promise<obj
   for (let i = 0; i < cradFile.length; i++) {
     const file = cradFile[i] || ''
     const filePath = path.join(cardPath, file)
-    const content = await import(filePath)
+    const content = await loadJsonFile(filePath) as any
     finalContent = Object.assign({}, finalContent, content.default)
   }
   if (isUser) {
@@ -57,6 +60,7 @@ async function loadDeck (cardPath: string, isUser: boolean = false): Promise<obj
  */
 export async function initCard (): Promise<{} | any> {
   try {
+
     const cardPath = path.join(__dirname, '../cards')
     cardMap = await loadDeck(cardPath, false)
     const userCardPath = path.join(RootPath.path, '/PublicDeck')

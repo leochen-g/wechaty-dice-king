@@ -6,7 +6,10 @@ import { log } from 'wechaty'
 import { getAllDrawDirective, getUserDrawDirective } from './drawEvent.js'
 import lodash from 'lodash'
 import RootPath from "app-root-path";
-
+import {fileURLToPath} from 'url'
+import {loadJsonFile} from 'load-json-file';
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 /**
  * 指令参数为空 默认回复
@@ -60,8 +63,8 @@ async function loadMod (cardPath: string, isUser: boolean = false): Promise<obje
   for (let i = 0; i < cradFile.length; i++) {
     const file = cradFile[i] || ''
     const filePath = path.join(cardPath, file)
-    const content = await import(filePath)
-    finalContent = Object.assign({}, finalContent, content.default.helpdoc)
+    const content = await loadJsonFile(filePath) as any
+    finalContent = Object.assign({}, finalContent, content.helpdoc)
   }
   if (isUser) {
     log.info(`${new Date()}\n

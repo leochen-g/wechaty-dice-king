@@ -1,16 +1,16 @@
 {
   "name": "wechaty-dice-king",
-  "version": "1.0.7",
+  "version": "1.0.6",
   "description": "Wechaty 卡牌抽取游戏插件，类似骰娘https://v2docs.kokona.tech/zh/latest/CookBook.html",
   "typings": "./dist/esm/index.d.ts",
+  "type": "module",
   "exports": {
     ".": {
-      "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js"
+      "import": "./dist/esm/index.js"
     }
   },
   "scripts": {
-    "build": "tsc && tsc -p tsconfig.cjs.json",
+    "build": "tsc",
     "clean": "shx rm -fr dist/*",
     "dist": "npm-run-all clean build copy",
     "dist:commonjs": "jq -n \"{ type: \\\"commonjs\\\" }\" > dist/cjs/package.json",
@@ -47,6 +47,8 @@
   "dependencies": {
     "@types/app-root-path": "^1.2.4",
     "app-root-path": "^3.0.0",
+    "import-meta-resolve": "^2.1.0",
+    "load-json-file": "^7.0.1",
     "lodash": "^4.17.21",
     "qrcode-terminal": "^0.12.0",
     "random-sampler": "^0.1.1"
@@ -76,14 +78,6 @@
     {
       "from": "src/mod/*.json",
       "to": "dist/esm/mod/"
-    },
-    {
-      "from": "src/cards/*.json",
-      "to": "dist/cjs/cards/"
-    },
-    {
-      "from": "src/mod/*.json",
-      "to": "dist/cjs/mod/"
     }
   ],
   "files": [
@@ -94,6 +88,6 @@
   "publishConfig": {
     "tag": "next"
   },
-  "_id": "wechaty-dice-king@1.0.7",
-  "_commitid": "39c70ca"
+  "_id": "wechaty-dice-king@1.0.6",
+  "_commitid": "f66887a"
 }

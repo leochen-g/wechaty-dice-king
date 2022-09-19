@@ -3,6 +3,8 @@ Wechaty 骰王卡牌抽取游戏插件，类似骰娘https://v2docs.kokona.tech/
 
 ## 使用
 
+This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c). In Node.js (16.0+, or 18.0+)
+
 ### 安装依赖
 
 ```shell
