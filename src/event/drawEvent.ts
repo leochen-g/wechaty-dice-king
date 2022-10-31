@@ -37,7 +37,7 @@ async function loadDeck (cardPath: string, isUser: boolean = false): Promise<obj
     const file = cradFile[i] || ''
     const filePath = path.join(cardPath, file)
     const content = await loadJsonFile(filePath) as any
-    finalContent = Object.assign({}, finalContent, content.default)
+    finalContent = Object.assign({}, finalContent, content)
   }
   if (isUser) {
     log.info(`${new Date()}\n
@@ -98,7 +98,7 @@ async function getCard ({ key, name, self, room }:{key: any, name: string, self:
   const deckKeys = Object.keys(deckContent).filter((item:any) => {
     return !item.startsWith('_')
   })
-  log.info('1111获取用户牌堆实例')
+  log.info('获取用户牌堆实例')
 
   if (deckKeys.includes(key)) { // 优先实例牌组
     log.info('优先实例牌组')
