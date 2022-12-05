@@ -121,7 +121,7 @@ function onScan (qrcode:string, status: ScanStatus) {
   }
 }
 
-export function diceBot (
+function diceBot (
   config: DiceBotConfig = {
     cardJson: [],
     quickModel: false,
@@ -148,3 +148,8 @@ export function diceBot (
     wechaty.on('message', onMessage)
   }
 }
+
+export {
+  diceBot
+}
+export default diceBot
