@@ -1,6 +1,6 @@
 import { log } from 'wechaty'
 import { exec } from './dicBot.js'
-import Sampler from 'random-sampler'
+import { Sampler } from 'random-sampler'
 import type { Ireply } from '../service/talker.js'
 import path from 'path'
 import RootPath  from 'app-root-path'

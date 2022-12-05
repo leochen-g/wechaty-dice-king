@@ -5,7 +5,7 @@ import fs from 'fs'
 import path from 'path'
 import { Contact, log, Room } from 'wechaty'
 import { getAllCardMap, getAllDrawDirective } from './drawEvent.js'
-import Sampler from 'random-sampler'
+import { Sampler } from 'random-sampler'
 
 /**
  * 指令参数为空 默认回复
