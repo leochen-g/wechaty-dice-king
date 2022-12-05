@@ -1,6 +1,6 @@
 {
   "name": "wechaty-dice-king",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "Wechaty 卡牌抽取游戏插件，类似骰娘https://v2docs.kokona.tech/zh/latest/CookBook.html",
   "typings": "./dist/esm/index.d.ts",
   "type": "module",
@@ -88,6 +88,6 @@
   "publishConfig": {
     "tag": "next"
   },
-  "_id": "wechaty-dice-king@1.0.15",
-  "_commitid": "a92c59a"
+  "_id": "wechaty-dice-king@1.0.16",
+  "_commitid": "f4ea094"
 }
