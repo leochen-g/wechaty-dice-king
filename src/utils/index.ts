@@ -1,6 +1,6 @@
 import { log } from 'wechaty'
 import { exec } from './dicBot.js'
-import { default as Sampler } from 'random-sampler'
+import DSampler from 'random-sampler'
 import type { Ireply } from '../service/talker.js'
 import path from 'path'
 import RootPath  from 'app-root-path'
@@ -9,7 +9,8 @@ import { upCreatDeck } from '../event/deckEvent.js'
 import {fileURLToPath} from 'url'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
-
+// @ts-ignore
+const Sampler = DSampler.default;
 const imagePath = path.join(__dirname, '../data/image')
 const userImagePath = path.join(RootPath.path, '/data/image')
 
