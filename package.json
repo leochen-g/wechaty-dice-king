@@ -91,10 +91,5 @@
     "tag": "next"
   },
   "_id": "wechaty-dice-king@1.0.19",
-  "_commitid": "409e9da",
-  "git": {
-    "scripts": {
-      "pre-push": "npx git-scripts-pre-push"
-    }
-  }
+  "_commitid": "409e9da"
 }
