@@ -80,7 +80,7 @@ export async function initCard (): Promise<{} | any> {
  * @param self
  * @param room
  */
-async function getCard ({ key, name, self, room }:{key: any, name: string, self: string, room?: Room}): Promise<Ireply[]> {
+export async function getCard ({ key, name, self, room }:{key: any, name: string, self: string, room?: Room}): Promise<Ireply[]> {
   const isRoom = !!room
   const roomName = room ? await room.topic() : ''
   // 默认内置牌组
@@ -94,11 +94,10 @@ async function getCard ({ key, name, self, room }:{key: any, name: string, self:
   const allMap = Object.assign({}, cardMap, userCardMap)
   // 用户实例牌组
   const deckContent: { [index: string]: any } = await getDeckContent({ isRoom, name: isRoom ? roomName : name  })
-  log.info('获取用户牌堆实例', deckContent)
+
   const deckKeys = Object.keys(deckContent).filter((item:any) => {
     return !item.startsWith('_')
   })
-  log.info('获取用户牌堆实例')
 
   if (deckKeys.includes(key)) { // 优先实例牌组
     log.info('优先实例牌组')

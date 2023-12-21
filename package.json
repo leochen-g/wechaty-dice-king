@@ -14,7 +14,8 @@
     "clean": "shx rm -fr dist/*",
     "dist": "npm-run-all clean build copy",
     "dist:commonjs": "jq -n \"{ type: \\\"commonjs\\\" }\" > dist/cjs/package.json",
-    "start": "ts-node test/index.ts",
+    "start": "ts-node  --esm  test/index.ts",
+    "test-dic": "ts-node  --esm  src/utils/schedule.ts",
     "start:common": "node test/dic.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "pack": "npm pack",
@@ -50,6 +51,7 @@
     "import-meta-resolve": "^2.1.0",
     "load-json-file": "^7.0.1",
     "lodash": "^4.17.21",
+    "node-schedule": "^2.1.1",
     "qrcode-terminal": "^0.12.0",
     "random-sampler": "^0.1.1"
   },
@@ -60,6 +62,7 @@
     "@chatie/tsconfig": "^4.6.2",
     "@types/lodash": "^4.14.172",
     "@types/ms": "^0.7.31",
+    "@types/node-schedule": "^2.1.5",
     "@types/qrcode-terminal": "^0.12.0",
     "@typescript-eslint/parser": "^4.32.0",
     "copy-files-from-to": "^3.2.2",
@@ -67,8 +70,7 @@
     "shx": "^0.3.3",
     "ts-node": "^10.2.1",
     "typescript": "^4.4.3",
-    "wechaty": "^1.20.2",
-    "wechaty-puppet-wechat": "^1.18.1"
+    "wechaty": "^1.20.2"
   },
   "copyFiles": [
     {
@@ -89,5 +91,10 @@
     "tag": "next"
   },
   "_id": "wechaty-dice-king@1.0.16",
-  "_commitid": "f4ea094"
+  "_commitid": "f4ea094",
+  "git": {
+    "scripts": {
+      "pre-push": "npx git-scripts-pre-push"
+    }
+  }
 }

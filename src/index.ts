@@ -4,10 +4,12 @@ import { filterMsg } from './service/directive.js'
 import { contactSay, Ireply, delay, roomSay } from './service/talker.js'
 import { initCard } from './event/drawEvent.js'
 import { initMod } from './event/helpEvent.js'
+import {initSchedule, TaskInfo} from "./utils/schedule.js";
 
 export interface DiceBotConfig {
   quickModel?: boolean;
   cardJson?: [];
+  task?: TaskInfo[];
 }
 
 /**
@@ -121,10 +123,21 @@ function onScan (qrcode:string, status: ScanStatus) {
   }
 }
 
+let task: TaskInfo[] = [];
+function onReady() {
+  try {
+    // @ts-ignore
+    initSchedule(this, task)
+  } catch (e) {
+    console.log('catch error:' + e)
+  }
+}
+
 function diceBot (
   config: DiceBotConfig = {
     cardJson: [],
     quickModel: false,
+    task: []
   }
 ): WechatyPlugin {
   initCard().then(res => {
@@ -139,6 +152,9 @@ function diceBot (
   }).catch(e => {
     log.info('加载词条失败', e)
   })
+
+  task = config.task || [];
+
   return function (wechaty: Wechaty) {
     if (config.quickModel) {
       wechaty.on('scan', onScan)
@@ -146,6 +162,7 @@ function diceBot (
       wechaty.on('logout', onLogout)
     }
     wechaty.on('message', onMessage)
+    wechaty.on('ready', onReady)
   }
 }
 

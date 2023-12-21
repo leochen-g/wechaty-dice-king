@@ -160,7 +160,6 @@ export function replaceHolder (str: any, prefix: any, surfix: any, obj: any, nam
     let val = obj
     let temp = ''
     try {
-      console.log('8888888', holder, val[holder])
       temp = needRandom ? randomCard(val[holder]) : val[holder]
       val = replaceAllPlaceholder(obj, temp, name, self, needRandom)
     } catch (E) {
@@ -193,7 +192,6 @@ export function replaceCoc (str: any, prefix: any, surfix: any) {
   let ret = ''
   let p1 = 0
   let p2 = 0
-  console.log('str', str)
   while (true) {
     p1 = str.indexOf(prefix, p2) // 匹配不到前缀直接返回
     if (p1 === -1) break
